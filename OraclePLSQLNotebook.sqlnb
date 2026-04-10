@@ -1,0 +1,108 @@
+cells:
+  - kind: 1
+    value: "## Repositorio Oracle Database PL/SQL\r\n"
+    languageId: markdown
+  - kind: 1
+    value: "Para que el motor pueda imprimir mensajes en pantalla, hay que usar el
+      comando:"
+    languageId: markdown
+  - kind: 2
+    value: SET SERVEROUTPUT ON;
+    languageId: oracle-sql
+  - kind: 1
+    value: "### Bloque anonimo o bloque PL\r
+
+      \r
+
+      Un bloque en Oracle esta conformado por una zona de declaracion de
+      variables, un inicio y un final.\r
+
+      Cada linea agregada en el codigo debe terminar con un punto y coma.\r\n"
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE\r
+
+      \    v_num NUMBER(2) := 10;\r
+
+      \    v_string VARCHAR(10) := 'Jeff';\r
+
+      \    v_date DATE :=  SYSDATE;\r
+
+      BEGIN\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Hello world!');\r
+
+      \    DBMS_OUTPUT.PUT_LINE('v_num value: ' || v_num);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('v_string value: ' || v_string);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('v_date value: ' || v_date);\r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: "## Pedir datos por consola"
+    languageId: markdown
+  - kind: 1
+    value: Para pedir o ingresar datos por consola, al crear la variable le
+      asignaremos un & y un nombre (placeholder)
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE\r
+
+      \    v1 NUMBER(5) := &valor_1;\r
+
+      \    v2 NUMBER(5) := &valor_2;\r
+
+      \    v_sum NUMBER (10);\r
+
+      BEGIN\r
+
+      \    v_sum := v1 + v2;\r
+
+      \    DBMS_OUTPUT.PUT_LINE(v1 || ' + ' || v2 || ' = ' || v_sum);\r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: "## Bloques if elsif y else\r\n"
+    languageId: markdown
+  - kind: 1
+    value: Podemos manejar el flujo con el bloque if, veremos como se implementa y
+      los diferentes operadores logicos
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \    v1 NUMBER(2) := 1;\r
+
+      \    v2 NUMBER(2) := 1;\r
+
+      \    v3 NUMBER(2) := 1;\r
+
+      BEGIN\r
+
+      \    IF v1 > v2 AND v1 > v3 THEN\r
+
+      \    DBMS_OUTPUT.PUT_LINE(v1 || ' is the largest');\r
+
+      \    ELSIF v2 > v1 AND v2 > v3 THEN\r
+
+      \    DBMS_OUTPUT.PUT_LINE(v2 || ' is the largest');\r
+
+      \    ELSIF v1 = v2 AND v1 = v3 THEN\r
+
+      \    DBMS_OUTPUT.PUT_LINE(v1 || ' and ' || v2 || ' and ' || v3 || ' are
+      equals');\r
+
+      \    ELSE\r
+
+      \    DBMS_OUTPUT.PUT_LINE(v3 || ' is the largest');\r
+
+      \    END IF;\r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: ""
+    languageId: markdown

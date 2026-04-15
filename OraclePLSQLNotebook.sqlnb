@@ -527,5 +527,326 @@ cells:
       END;"
     languageId: oracle-sql
   - kind: 1
-    value: "## Excepciones\r\n"
+    value: "## Manejo de excepciones\r\n"
     languageId: markdown
+  - kind: 1
+    value: "Con el uso de EXCEPTION podemos manejar los diferentes errores que
+      aparecen al momento de ejecutar\r
+
+      \r
+
+      * En este link podemos encontrar excepciones ya predefinidas
+      https://www.ibm.com/docs/es/db2/11.5.x?topic=plsql-exception-handling\r
+
+      \r
+
+      * Las excepciones tienen que estar manejadas desde la más especifica a la
+      más general\r\n"
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \    v_code NUMBER(2) := &codeNumber;\r
+
+      \    v_product PRODUCTO%rowtype;\r
+
+      BEGIN\r
+
+      \r
+
+      \    select * into v_product from PRODUCTO WHERE CODIGO = v_code;\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product name: ' || v_product.nombre);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product code: ' || v_product.codigo);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product price: ' || v_product.precio);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product manufacturer_code: ' ||
+      v_product.codigo_fabricante);\r
+
+      EXCEPTION \r
+
+      \    WHEN no_data_found THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Product with code ' || v_code || ' was not
+      found');\r
+
+      \r
+
+      \    WHEN others THEN \r
+
+      \        DBMS_OUTPUT.PUT_LINE('Error unidentified');\r
+
+      \r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: "## Manejo de excepciones propias\r\n"
+    languageId: markdown
+  - kind: 1
+    value: También se da el caso en que queremos crear nuestras propias excepciones
+      y lanzarlas, para darle mas claridad a ciertas cosas
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \    v_code NUMBER(2) := &codeNumber;\r
+
+      \    v_product PRODUCTO%rowtype;\r
+
+      \    price_limit EXCEPTION; -- le declaramos su tipo, en este casos era
+      una excepcion\r
+
+      BEGIN\r
+
+      \r
+
+      \    select * into v_product from PRODUCTO WHERE CODIGO = v_code;\r
+
+      \r
+
+      \    IF v_product.precio >= 100 THEN\r
+
+      \        RAISE price_limit;\r
+
+      \r
+
+      \    END IF;\r
+
+      \r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product name: ' || v_product.nombre);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product code: ' || v_product.codigo);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product price: ' || v_product.precio);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product manufacturer_code: ' ||
+      v_product.codigo_fabricante);\r
+
+      \r
+
+      EXCEPTION \r
+
+      \    WHEN no_data_found THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Product with code ' || v_code || ' was not
+      found');\r
+
+      \    \r
+
+      \    WHEN price_limit THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Limit price was reached');\r
+
+      \r
+
+      \    WHEN others THEN \r
+
+      \        DBMS_OUTPUT.PUT_LINE('Error unidentified');\r
+
+      \r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: Tambien podemos lanzar una excepcion a nivel aplicacion con un mensaje de
+      error mejor definido
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \    v_code NUMBER(2) := &codeNumber;\r
+
+      \    v_product PRODUCTO%rowtype;\r
+
+      \    price_limit EXCEPTION; -- le declaramos su tipo, en este casos era
+      una excepcion\r
+
+      BEGIN\r
+
+      \r
+
+      \    select * into v_product from PRODUCTO WHERE CODIGO = v_code;\r
+
+      \r
+
+      \    IF v_product.precio >= 100 THEN\r
+
+      \        RAISE_APPLICATION_ERROR(-20998, 'Price limit of 100$ was
+      reached'); -- el primer parametro es como el codigo de error que aparece
+      en la consola (de -20000 hasta -20999), y el segundo parametro el mensaje
+      de error\r
+
+      \        -- si manejamos la exepcion en el bloque EXCEPTION (por ejemplo
+      con un other), esta se sobrepone al RAISE_APPLICATION_ERROR\r
+
+      \    END IF;\r
+
+      \r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product name: ' || v_product.nombre);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product code: ' || v_product.codigo);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product price: ' || v_product.precio);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product manufacturer_code: ' ||
+      v_product.codigo_fabricante);\r
+
+      \r
+
+      EXCEPTION \r
+
+      \    WHEN no_data_found THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Product with code ' || v_code || ' was not
+      found');\r
+
+      \r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: Tambien podemos agregarle una excepcion a un codigo de error
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \    v_code NUMBER(2) := &codeNumber;\r
+
+      \    v_product PRODUCTO%rowtype;\r
+
+      \    price_limit EXCEPTION; -- le declaramos su tipo, en este casos era
+      una excepcion\r
+
+      \    PRAGMA EXCEPTION_INIT(price_limit, -20998);\r
+
+      BEGIN\r
+
+      \r
+
+      \    select * into v_product from PRODUCTO WHERE CODIGO = v_code;\r
+
+      \r
+
+      \    IF v_product.precio >= 100 THEN\r
+
+      \        RAISE_APPLICATION_ERROR(-20998, 'Price limit of 100$ was
+      reached'); -- el primer parametro es como el codigo de error que aparece
+      en la consola (de -20000 hasta -20999), y el segundo parametro el mensaje
+      de error\r
+
+      \        -- si manejamos la exepcion en el bloque EXCEPTION (por ejemplo
+      con un other), esta se sobrepone al RAISE_APPLICATION_ERROR\r
+
+      \    END IF;\r
+
+      \r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product name: ' || v_product.nombre);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product code: ' || v_product.codigo);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product price: ' || v_product.precio);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product manufacturer_code: ' ||
+      v_product.codigo_fabricante);\r
+
+      \r
+
+      EXCEPTION \r
+
+      \    WHEN no_data_found THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Product with code ' || v_code || ' was not
+      found');\r
+
+      \    \r
+
+      \    WHEN price_limit THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE(sqlcode); -- aqui imprimimos el codigo de
+      error\r
+
+      \r
+
+      \        DBMS_OUTPUT.PUT_LINE(sqlerrm); -- aquí imprimimos el error
+      completo (codigo: mensaje)\r
+
+      \r
+
+      \r
+
+      END;"
+    languageId: oracle-sql
+  - kind: 1
+    value: "## Procedimientos y Funciones\r\n"
+    languageId: markdown
+  - kind: 2
+    value: "CREATE OR REPLACE PROCEDURE infoProducto(p_code producto.codigo%TYPE) \r
+
+      AS \r
+
+      \    v_product PRODUCTO%rowtype;\r
+
+      \r
+
+      BEGIN\r
+
+      \    select * into v_product from PRODUCTO WHERE CODIGO = p_code;\r
+
+      \r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product name: ' || v_product.nombre);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product code: ' || v_product.codigo);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product price: ' || v_product.precio);\r
+
+      \    DBMS_OUTPUT.PUT_LINE('Product manufacturer_code: ' ||
+      v_product.codigo_fabricante);   \r
+
+      \r
+
+      EXCEPTION \r
+
+      \    WHEN no_data_found THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Product with code ' || p_code || ' was not
+      found');\r
+
+      \r
+
+      \    WHEN others THEN\r
+
+      \        DBMS_OUTPUT.PUT_LINE('Error unidentified');\r
+
+      \r
+
+      END;\r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: Luego de compilar el procedimiento ya podemos hacer uso de él
+    languageId: markdown
+  - kind: 2
+    value: "DECLARE \r
+
+      \r
+
+      \    v_code NUMBER(2) := &codeNumber;\r
+
+      \r
+
+      BEGIN\r
+
+      \r
+
+      \    infoProducto(v_code);\r
+
+      \r
+
+      END;"
+    languageId: oracle-sql
